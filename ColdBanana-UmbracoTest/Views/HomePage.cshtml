@@ -1,0 +1,26 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+
+
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.HomePage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+
+}
+
+
+
+
+
+
+<div class="event-list-container">
+    <br>
+    <h1 class="event-list-title">EVENTS</h1>
+    <div class="event-list-wrapper">
+        <div class="event-list">
+
+            @Html.GetBlockListHtml(Model.EventGroup)
+        </div>
+        <i class="fas fa-chevron-right arrow"></i>
+    </div>
+</div>

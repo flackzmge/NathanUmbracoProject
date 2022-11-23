@@ -1,0 +1,211 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@using ColdBanana_UmbracoTest.Models;
+
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+
+    <link rel="stylesheet" href="@Url.Content("~/css/style.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/css/details.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/css/form.css")" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Sen:wght@400;700;800&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <title>Events Website | Cold Banana</title>
+</head>
+<body>
+
+
+
+    <!-- NavBar-->
+
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo-container">
+                <h1 class="logo">@Model.Name</h1>
+
+            </div>
+            <div class="menu-container">
+                <ul class="menu-list">
+                    <li class="menu-list-item active">Home</li>
+                    <li class="menu-list-item">Details</li>
+                    <li class="menu-list-item">Events</li>
+                </ul>
+            </div>
+            <div class="profile-container">
+                <div class="toggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <i class="fas fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar">
+        <i class="left-menu-icon fas fa-search"></i>
+        <i class="left-menu-icon fas fa-home"></i>
+        <i class="left-menu-icon fas fa-users"></i>
+        <i class="left-menu-icon fas fa-tv"></i>
+
+    </div>
+
+
+
+    <!-- Content Containers-->
+    <div class="container">
+        <div class="content-container">
+            <!-- Home Page-->
+            <div class="featured-content"
+                 style="background: linear-gradient(to bottom, rgba(0,0,0,0), #151515), url('https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F266041539%2F133693000585%2F1%2Foriginal.20220413-105349?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=87%2C0%2C1000%2C500&s=f72dbfd55f9e4af522cb6eb79d291e36');">
+
+            </div>
+
+
+            <!-- Modal -->
+            <div class="modale" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-header">
+                        <h2>Please Login</h2>
+                        <a href="#" class="btn-close closemodale" aria-hidden="true">&times;</a>
+                    </div>
+                    <div class="modal-body">
+                        <label>Event:</label> <input id="EventName" type="text" name="" required=""  size="80" readonly />
+                        <br />
+                        <br />
+                        <label>Full Name:</label> <input id="FullName" type="text" name="" required=""  size="80" />
+                        <br />
+                        <br />
+                        <label>Email:</label> <input id="BuyerEmail" type="email" name="" required=""  size="80" /><br>
+                        <br />
+                        <br />
+                        <label>Tickets:</label> <input id="TicketNo" type="number" name="" required="" min="1" max="100">
+                    </div>
+                    <div class="modal-footer">
+
+
+                        <a href="#" class="btn" onclick="sendTransactionDetails()" id="btn_ingresar">SUBMIT</a>
+                    </div>
+                </div>
+            </div>
+    
+
+
+
+            @RenderBody()
+
+
+
+
+</body>
+
+
+
+
+
+
+
+<script>
+
+    
+
+    $(document).ready(function () {
+
+
+
+
+        
+
+
+    });
+
+
+    function buyTicket(EventName)
+    {
+
+        $('.modale').addClass('opened');
+        $("#EventName").val(EventName)
+        $("#FullName").val("")
+        $("#BuyerEmail").val("")
+        $("#TicketNo").val("")
+        
+    }
+
+    
+    function sendTransactionDetails()
+    {
+
+        $.ajax({
+            url: '/umbraco/Surface/EventSurface/BuyTicket/',
+            dataType: 'json',
+            type: 'post',
+            async: true,
+            data: { 'customerName': $("#FullName").val(), 'eventTitle': $("#EventName").val(), 'ticketDetails': $("#TicketNo").val() + ' ticket(s))', 'customerEmail': $("#BuyerEmail").val()},
+            success: function (data, textStatus, jQxhr) {
+                alert("Email Confirmation has been sent")
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                alert("error " + errorThrown)
+            }
+        });
+
+        $('.modale').removeClass('opened');
+
+    }
+
+
+   
+    const arrows = document.querySelectorAll(".arrow");
+
+    console.log(arrows);
+
+    const eventLists = document.querySelectorAll(".event-list");
+
+    console.log(eventLists);
+
+    arrows.forEach((arrow, i) => {
+        const itemNumber = eventLists[i].querySelectorAll("img").length;
+        let clickCounter = 0;
+        arrow.addEventListener("click", () => {
+            const ratio = Math.floor(window.innerWidth / 270);
+            clickCounter++;
+            if (itemNumber - (4 + clickCounter) + (4 - ratio) >= 0) {
+                eventLists[i].style.transform = `translateX(${eventLists[i].computedStyleMap().get("transform")[0].x.value - 300
+                    }px)`;
+            } else {
+                eventLists[i].style.transform = "translateX(0)";
+                clickCounter = 0;
+            }
+        });
+
+        console.log(Math.floor(window.innerWidth / 270));
+    });
+
+    //TOGGLE
+
+    const ball = document.querySelector(".toggle-ball");
+    const items = document.querySelectorAll(
+        ".container,.event-list-title,.navbar-container,.sidebar,.left-menu-icon,.toggle"
+    );
+
+    ball.addEventListener("click", () => {
+        items.forEach((item) => {
+            item.classList.toggle("active");
+        });
+        ball.classList.toggle("active");
+    });</script>
+
+
+</html>

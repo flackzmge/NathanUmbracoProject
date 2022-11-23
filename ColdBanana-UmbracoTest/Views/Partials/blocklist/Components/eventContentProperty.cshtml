@@ -1,0 +1,26 @@
+
+@inherits UmbracoViewPage<BlockListItem>
+
+@{
+    var row = (EventContentProperty)Model.Content;
+
+}
+
+
+@foreach (var item in row.EventItems)
+{
+    var rowItem = (EventItemRow)item.Content;
+
+ 
+    <div class="event-list-item">
+        <img class="event-list-item-img" src=" @rowItem.EventImage.Url()" alt="">
+        <span class="event-list-item-title">@rowItem.EventTitle.</span>
+        <p class="event-list-item-desc">
+           <!-- @rowItem.EventDescription -->
+        </p>
+        <button a href="#" class="event-list-item-button openmodale" onclick="buyTicket('@rowItem.EventTitle')">Buy Ticket</button>
+    </div>
+    
+}
+
+
